@@ -38,6 +38,14 @@ class Phys {
     Composite.add(engine.world, this.matter);
   }
 
+  get angle() {
+    return this.matter.angle;
+  }
+
+  set angle(a: number) {
+    Body.setAngle(this.matter, a);
+  }
+
   get position() {
     return {
       x: this.matter.position.x,
