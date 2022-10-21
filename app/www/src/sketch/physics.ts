@@ -29,11 +29,18 @@ const update = () => {
 // }
 
 class Phys {
+  // Private Variables
+  private lastPosition: {x: number, y: number};
+  private lastAngle: number;
+
   // Public Variables
   public matter: Body;
 
   constructor(builder: () => Body) {
     this.matter = builder();
+
+    this.lastPosition = this.matter.position;
+    this.lastAngle = this.matter.angle;
 
     Composite.add(engine.world, this.matter);
   }
@@ -43,6 +50,11 @@ class Phys {
   }
 
   set angle(a: number) {
+    if (this.matter.isStatic) {
+      this.angularVelocity = -(this.lastAngle - a);
+      this.lastAngle = a;
+    }
+
     Body.setAngle(this.matter, a);
   }
 
@@ -54,6 +66,11 @@ class Phys {
   }
 
   set position(pos: { x: number; y: number }) {
+    if (this.matter.isStatic) {
+      this.velocity = { x: -(this.lastPosition.x - pos.x), y: -(this.lastPosition.y - pos.y) };
+      this.lastPosition = pos;
+    }
+
     Body.setPosition(this.matter, {
       x: pos.x,
       y: pos.y,
@@ -110,6 +127,7 @@ class PhysRect extends Phys {
   }
 
   set position(pos: { x: number; y: number }) {
+    super.position = pos;
     Body.setPosition(this.matter, {
       x: pos.x + this.width / 2,
       y: pos.y + this.height / 2,
