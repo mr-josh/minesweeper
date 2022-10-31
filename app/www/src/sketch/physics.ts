@@ -11,7 +11,7 @@ import {
 
 import processing from "p5";
 
-const WORLD_SCALE = 5;
+const WORLD_SCALE = 1.5;
 
 const engine = Engine.create({
   gravity: {
@@ -79,14 +79,6 @@ class Phys {
   }
 
   set position(pos: { x: number; y: number }) {
-    if (this.matter.isStatic) {
-      this.velocity = {
-        x: -(this.lastPosition.x - pos.x),
-        y: -(this.lastPosition.y - pos.y),
-      };
-      this.lastPosition = pos;
-    }
-
     Body.setPosition(this.matter, {
       x: pos.x * WORLD_SCALE,
       y: pos.y * WORLD_SCALE,
@@ -112,6 +104,16 @@ class Phys {
   isCollidingWith(obj: Body): boolean {
     // @ts-ignore
     return Collision.collides(this.matter, obj);
+  }
+
+  phys() {
+    if (this.matter.isStatic) {
+      this.velocity = {
+        x: -(this.lastPosition.x - this.position.x) * WORLD_SCALE,
+        y: -(this.lastPosition.y - this.position.y) * WORLD_SCALE,
+      };
+      this.lastPosition = this.position;
+    }
   }
 
   draw(_: processing) {}
