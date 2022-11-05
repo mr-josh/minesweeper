@@ -58,6 +58,10 @@ class Phys {
     Composite.add(engine.world, this.matter);
   }
 
+  remove() {
+    Composite.remove(engine.world, this.matter);
+  }
+
   get angle() {
     return this.matter.angle;
   }
