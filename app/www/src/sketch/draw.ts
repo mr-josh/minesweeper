@@ -1,30 +1,34 @@
-import { start, update } from "sketch/physics";
-
 import processing from "p5";
+import { Board } from "./classes/board";
 
 const Sketch = (p5: processing) => {
+  let board: Board;
+
   // This is the same as our `function setup() { ... }`
   p5.setup = () => {
-    p5.createCanvas(400, 400);
-
-    start(); // Start Physics
+    p5.createCanvas(600, 600);
+    board = new Board(p5);
   };
 
   // This is the same as our `function draw() { ... }`
   p5.draw = () => {
-    update(); // Update Physics
+    p5.background(200);
+    board.draw(p5);
+  };
 
-    p5.background("white");
-
-    // Draw a circle rotating around the center of the canvas
-    let x = Math.cos(p5.millis() / 500) * 100;
-    let y = Math.sin(p5.millis() / 500) * 100;
-    p5.circle(
-      p5.width / 2 + x,
-      p5.height / 2 + y,
-      50
+  // This is the same as our `function mousePressed() { ... }`
+  p5.mousePressed = (ev: MouseEvent) => {
+    board.clickCell(
+      p5,
+      p5.mouseX,
+      p5.mouseY,
+      ev.button == 0 ? "left" : "right"
     );
   };
+
+  p5.keyPressed = (ev: KeyboardEvent) => {
+    if (ev.key == "r") board.reset();
+  }
 };
 
 export default Sketch;
