@@ -144,24 +144,29 @@ class Board {
       }
     }
 
+    let winnable = true;
     for (const row of this.cells) {
       for (const cell of row) {
-        // If an indicator is incorrectly flagged or not revealed, guard win
-        if (cell instanceof Indicator && cell.getState() == "flagged") return;
-        if (cell instanceof Indicator && cell.getState() == "hidden") return;
-
-        // If a mine is not flagged, guard win
-        if (cell instanceof Mine && cell.getState() == "hidden") return;
-
         // If a mine is revealed, guard win and set board to lose state
         if (cell instanceof Mine && cell.getState() == "revealed") {
           this.lose();
           return;
         }
+
+        // If an indicator is incorrectly flagged or not revealed, guard win
+        if (cell instanceof Indicator && cell.getState() == "flagged")
+          winnable = false;
+        if (cell instanceof Indicator && cell.getState() == "hidden")
+          winnable = false;
+
+        // If a mine is not flagged, guard win
+        if (cell instanceof Mine && cell.getState() == "hidden")
+          winnable = false;
       }
     }
+
     // If all checks passed successfully, then set board to win state
-    this.win();
+    if (winnable) this.win();
   }
 
   getNeighbours(x: number, y: number) {
