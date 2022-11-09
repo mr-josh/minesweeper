@@ -93,6 +93,17 @@ class Board {
     }
   }
 
+  win() {
+    this.state = "won";
+    setTimeout(() => alert("You won!"), 10);
+  }
+
+  lose() {
+    this.state = "lost";
+    this.revealAll();
+    setTimeout(() => alert("You lost!"), 10);
+  }
+
   clickCell(p5: processing, x: number, y: number, b: "left" | "right") {
     if (this.state == "lost" || this.state == "won") return;
 
@@ -110,36 +121,47 @@ class Board {
       return;
     }
 
-    let cell = this.cells[boardX][boardY];
+    {
+      let cell = this.cells[boardX][boardY];
 
-    if (b == "left") {
-      if (this.state == "waiting") {
-        this.setup(boardX, boardY);
-        this.state = "playing";
+      if (b == "left") {
+        if (this.state == "waiting") {
+          this.setup(boardX, boardY);
+          this.state = "playing";
+          cell = this.cells[boardX][boardY];
+        }
+
+        if (cell.getState() == "flagged" || cell.getState() == "revealed")
+          return;
+
+        this.reveal(boardX, boardY);
       }
-      if (cell.getState() == "flagged" || cell.getState() == "revealed") return;
 
-      this.reveal(boardX, boardY);
-      if (cell instanceof Mine) {
-        this.state = "lost";
-        this.revealAll();
-        setTimeout(() => alert("You lost!"), 10);
+      if (b == "right") {
+        if (this.state == "waiting") return;
+
+        cell.toggleFlag();
       }
     }
 
-    if (b == "right") {
-      if (this.state == "waiting") return;
+    for (const row of this.cells) {
+      for (const cell of row) {
+        // If an indicator is incorrectly flagged or not revealed, guard win
+        if (cell instanceof Indicator && cell.getState() == "flagged") return;
+        if (cell instanceof Indicator && cell.getState() == "hidden") return;
 
-      cell.toggleFlag();
-      for (const row of this.cells) {
-        for (const cell of row) {
-          if (cell instanceof Indicator && cell.getState() == "flagged") return;
-          if (cell instanceof Mine && cell.getState() == "hidden") return;
+        // If a mine is not flagged, guard win
+        if (cell instanceof Mine && cell.getState() == "hidden") return;
+
+        // If a mine is revealed, guard win and set board to lose state
+        if (cell instanceof Mine && cell.getState() == "revealed") {
+          this.lose();
+          return;
         }
       }
-      this.state = "won";
-      setTimeout(() => alert("You won!"), 10);
     }
+    // If all checks passed successfully, then set board to win state
+    this.win();
   }
 
   getNeighbours(x: number, y: number) {
