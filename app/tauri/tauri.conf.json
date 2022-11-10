@@ -13,7 +13,7 @@
     "distDir": "../www/dist"
   },
   "package": {
-    "productName": "tauri-vite-ts-www-p5-matter",
+    "productName": "minesweeper",
     "version": "0.1.0"
   },
   "tauri": {
@@ -35,7 +35,7 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
-      "identifier": "com.tauri.dev",
+      "identifier": "com.mr-josh.minesweeper",
       "longDescription": "",
       "macOS": {
         "entitlements": null,
@@ -62,10 +62,13 @@
     "windows": [
       {
         "fullscreen": false,
-        "height": 600,
+        "height": 700,
         "resizable": true,
-        "title": "Tauri + Vite + TS + p5 + matter-js",
-        "width": 800
+        "title": "Minesweeper",
+        "width": 900,
+        "decorations": false,
+        "minWidth": 240,
+        "minHeight": 240
       }
     ]
   }

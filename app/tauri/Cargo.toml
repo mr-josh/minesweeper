@@ -1,11 +1,11 @@
 [package]
-name = "app"
+name = "minesweeper"
 version = "0.1.0"
-description = "A Tauri App"
-authors = ["you"]
+description = "A simple little minesweeper game"
+authors = ["mr-josh"]
 license = ""
 repository = ""
-default-run = "app"
+default-run = "minesweeper"
 edition = "2021"
 rust-version = "1.57"
 
