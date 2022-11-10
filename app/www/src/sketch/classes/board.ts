@@ -6,6 +6,7 @@ class Board {
   private height: number;
   private widthSideLonger: boolean;
   private padding: number;
+  private titleBarSize: number;
 
   private cellSize: number = -1;
   private cells: Array<Array<Cell>> = [];
@@ -19,12 +20,14 @@ class Board {
       width?: number;
       height?: number;
       padding?: number;
+      titleBarSize?: number;
     }
   ) {
     // Setup attributes
     this.width = settings?.width ?? 20;
     this.height = settings?.height ?? 15;
     this.padding = settings?.padding ?? 20;
+    this.titleBarSize = settings?.titleBarSize ?? 0;
     this.widthSideLonger = this.width >= this.height ? true : false;
 
     this.cellSize =
@@ -81,6 +84,12 @@ class Board {
         this.cells[x][y] = new Indicator(x, y, nearbyMines);
       }
     }
+  }
+
+  resize(p5: processing) {
+    this.cellSize =
+      ((this.widthSideLonger ? p5.width : p5.height) - this.padding) /
+      (this.widthSideLonger ? this.width : this.height);
   }
 
   reset() {
@@ -214,7 +223,9 @@ class Board {
     p5.push();
     p5.translate(
       p5.width / 2 - (this.cellSize * this.width) / 2,
-      p5.height / 2 - (this.cellSize * this.height) / 2
+      (p5.height - this.titleBarSize) / 2 -
+        (this.cellSize * this.height) / 2 +
+        this.titleBarSize
     );
 
     for (let x = 0; x < this.width; x++) {
