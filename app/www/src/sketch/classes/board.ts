@@ -117,7 +117,7 @@ class Board {
     if (this.state == "lost" || this.state == "won") return;
 
     let relativeX = p5.width / 2 - (this.cellSize * this.width) / 2;
-    let relativeY = p5.height / 2 - (this.cellSize * this.height) / 2;
+    let relativeY = (p5.height - this.titleBarSize) / 2 - (this.cellSize * this.height) / 2 + this.titleBarSize;
     let boardX = Math.floor((x - relativeX) / this.cellSize);
     let boardY = Math.floor((y - relativeY) / this.cellSize);
 
