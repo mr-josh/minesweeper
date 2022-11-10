@@ -2,4 +2,10 @@ body {
   background-color: grey;
   display: grid;
   place-items: center;
+  overflow: hidden;
+}
+
+#sketch {
+  width: 100vw;
+  height: 100vh;
 }
